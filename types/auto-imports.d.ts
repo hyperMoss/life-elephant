@@ -61,6 +61,7 @@ declare global {
   const useCounterStore: typeof import('../src/stores/counter')['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
+  const useHeadcountStore: typeof import('../src/stores/headcount')['useHeadcountStore']
   const useSlots: typeof import('vue')['useSlots']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
@@ -131,6 +132,7 @@ declare module 'vue' {
     readonly useCounterStore: UnwrapRef<typeof import('../src/stores/counter')['useCounterStore']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useHeadcountStore: UnwrapRef<typeof import('../src/stores/headcount')['useHeadcountStore']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>

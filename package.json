@@ -1,8 +1,8 @@
 {
-    "name": "taro-for-unocss",
+    "name": "life-elephant-app",
     "version": "1.0.0",
     "private": true,
-    "description": "taro project for 3.6.x use vue pinia and unocss",
+    "description": "公司人数统计小程序 - 基于Taro Vue3开发",
     "templateInfo": {
         "name": "vue3-pinia-unocss",
         "typescript": true,
