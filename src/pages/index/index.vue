@@ -48,8 +48,10 @@
           <input
             class="number-input"
             type="number"
-            v-model="customAmount"
+            v-model.number="customAmount"
             placeholder="输入数量"
+            min="1"
+            step="1"
           />
         </view>
         <view class="custom-buttons">
@@ -77,8 +79,10 @@
           <input
             class="number-input"
             type="number"
-            v-model="directCount"
+            v-model.number="directCount"
             placeholder="输入总人数"
+            min="0"
+            step="1"
           />
         </view>
         <button
@@ -161,24 +165,27 @@ function handleDecrement(amount: number) {
 
 // 自定义增加
 function handleCustomIncrement() {
-  if (customAmount.value && customAmount.value > 0) {
-    headcountStore.increment(customAmount.value)
+  const amount = Number(customAmount.value)
+  if (amount && amount > 0 && Number.isInteger(amount)) {
+    headcountStore.increment(amount)
     customAmount.value = undefined
   }
 }
 
 // 自定义减少
 function handleCustomDecrement() {
-  if (customAmount.value && customAmount.value > 0) {
-    headcountStore.decrement(customAmount.value)
+  const amount = Number(customAmount.value)
+  if (amount && amount > 0 && Number.isInteger(amount)) {
+    headcountStore.decrement(amount)
     customAmount.value = undefined
   }
 }
 
 // 直接设置总数
 function handleDirectSet() {
-  if (directCount.value !== undefined && directCount.value >= 0) {
-    headcountStore.setCount(directCount.value)
+  const count = Number(directCount.value)
+  if (!isNaN(count) && count >= 0 && Number.isInteger(count)) {
+    headcountStore.setCount(count)
     directCount.value = undefined
   }
 }
