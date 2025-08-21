@@ -170,10 +170,12 @@ function hideClearConfirm() {
 }
 
 // 确认清空数据
-function confirmClear() {
+async function confirmClear() {
   try {
-    localStorage.removeItem('company-headcount-records')
-    headcountStore.loadData()
+    await Taro.removeStorage({
+      key: 'company-headcount-records'
+    })
+    await headcountStore.loadData()
     showClearModal.value = false
     Taro.showToast({
       title: '数据已清空',
@@ -202,7 +204,7 @@ function exportData() {
     // 在小程序中，我们可以显示数据让用户复制
     Taro.showModal({
       title: '导出数据',
-      content: '数据已准备好，请复制以下内容保存',
+      content: '数据已准备好，请复制以下内容保存'+dataStr,
       showCancel: false,
       success: () => {
         // 这里可以进一步处理，比如显示在新页面或复制到剪贴板

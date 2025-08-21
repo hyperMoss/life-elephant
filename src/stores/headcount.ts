@@ -1,5 +1,6 @@
 // life-elephant-app/src/stores/headcount.ts
 import { defineStore } from "pinia";
+import Taro from "@tarojs/taro";
 
 export interface HeadcountRecord {
   date: string; // YYYY-MM-DD格式
@@ -15,20 +16,27 @@ export const useHeadcountStore = defineStore("headcount", () => {
   // 历史记录
   const records = ref<HeadcountRecord[]>([]);
 
-  // 从localStorage加载数据
-  function loadData() {
+  // 从Taro存储加载数据
+  async function loadData() {
     try {
-      const savedCount = localStorage.getItem("company-headcount");
-      const savedRecords = localStorage.getItem("company-headcount-records");
+      // 加载当前人数
+      const savedCount = await Taro.getStorage({
+        key: "company-headcount",
+      }).catch(() => ({ data: null }));
 
-      if (savedCount) {
-        const parsedCount = Number(savedCount);
+      if (savedCount.data) {
+        const parsedCount = Number(savedCount.data);
         currentCount.value =
           Number.isInteger(parsedCount) && parsedCount >= 0 ? parsedCount : 0;
       }
 
-      if (savedRecords) {
-        const parsedRecords = JSON.parse(savedRecords) || [];
+      // 加载历史记录
+      const savedRecords = await Taro.getStorage({
+        key: "company-headcount-records",
+      }).catch(() => ({ data: null }));
+
+      if (savedRecords.data) {
+        const parsedRecords = JSON.parse(savedRecords.data) || [];
         // 确保记录中的数字字段都是数字类型
         records.value = parsedRecords.map((record: any) => ({
           ...record,
@@ -44,14 +52,20 @@ export const useHeadcountStore = defineStore("headcount", () => {
     }
   }
 
-  // 保存数据到localStorage
-  function saveData() {
+  // 保存数据到Taro存储
+  async function saveData() {
     try {
-      localStorage.setItem("company-headcount", currentCount.value.toString());
-      localStorage.setItem(
-        "company-headcount-records",
-        JSON.stringify(records.value)
-      );
+      // 保存当前人数
+      await Taro.setStorage({
+        key: "company-headcount",
+        data: currentCount.value.toString(),
+      });
+
+      // 保存历史记录
+      await Taro.setStorage({
+        key: "company-headcount-records",
+        data: JSON.stringify(records.value),
+      });
     } catch (error) {
       console.error("保存数据失败:", error);
     }
@@ -201,7 +215,9 @@ export const useHeadcountStore = defineStore("headcount", () => {
   });
 
   // 初始化时加载数据
-  loadData();
+  loadData().catch((error) => {
+    console.error("初始化加载数据失败:", error);
+  });
 
   return {
     currentCount: readonly(currentCount),
